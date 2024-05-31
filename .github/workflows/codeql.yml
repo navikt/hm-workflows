@@ -1,0 +1,43 @@
+name: Gjør CodeQL-analyse
+
+on:
+  workflow_call:
+
+jobs:
+  codeql-analyze:
+    name: Gjør CodeQL-analyse
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    steps:
+      - name: Sjekk ut koden
+        uses: actions/checkout@v4
+
+      - name: Valider Gradle wrapper
+        uses: gradle/wrapper-validation-action@v2
+
+      - name: Sett opp CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: java
+          queries: security-and-quality
+
+      - name: Sett opp Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: temurin
+
+      - name: Sett opp Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Bygg applikasjon
+        run: ./gradlew build --no-daemon
+
+      - name: Gjør CodeQL-analyse
+        uses: github/codeql-action/analyze@v2
+        with:
+          category: "/language:java"

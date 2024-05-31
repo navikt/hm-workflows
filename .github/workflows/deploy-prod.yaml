@@ -1,0 +1,46 @@
+name: Deploy til prod-gcp
+
+on:
+  workflow_call:
+    secrets: inherit
+
+jobs:
+  deploy:
+    name: Deploy til prod-gcp
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Sjekk ut koden
+        uses: actions/checkout@v4
+
+      - name: NAIS-login
+        uses: nais/login@v0
+        id: nais-login
+        with:
+          team: teamdigihot
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+
+      - name: Definer release tag
+        env:
+          VERSION_TAG: ${{ github.event.release.tag_name }}
+          REGISTRY: ${{ steps.nais-login.outputs.registry }}
+          APP: ${{ github.event.repository.name }}
+        run: |
+          IMAGE=$REGISTRY/$APP:$VERSION_TAG
+          echo "IMAGE=${IMAGE}" >> $GITHUB_ENV
+          echo $IMAGE
+
+      - name: Deploy til prod-gcp
+        uses: nais/deploy/actions/deploy@v2
+        env:
+          CLUSTER: prod-gcp
+          RESOURCE: .nais/nais-prod.yaml # todo -> konfigurerbar
+          VARS: .nais/prod.json # todo -> konfigurerbar
+
+      - name: Etter deploy
+        uses: navikt/digihot-deploy/actions/post-production@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

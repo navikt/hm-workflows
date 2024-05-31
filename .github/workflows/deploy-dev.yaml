@@ -1,0 +1,68 @@
+name: Bygg, deploy til dev-gcp og lag release
+
+on:
+  workflow_call:
+    secrets: inherit
+
+jobs:
+  build:
+    name: Bygg, deploy til dev-gcp og lag release
+    permissions:
+      packages: write
+      contents: write
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sjekk ut koden
+        uses: actions/checkout@v4
+
+      - name: Sett opp Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: temurin
+
+      - name: Sett opp Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Bygg applikasjon
+        run: ./gradlew build --no-daemon
+
+      - name: Før deploy
+        uses: navikt/digihot-deploy/actions/pre-deploy@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Bygg og push Docker image
+        uses: nais/docker-build-push@v0
+        id: docker-build-push
+        with:
+          team: teamdigihot
+          salsa: true
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+          tag: ${{ env.VERSION_TAG }}
+
+      - name: Deploy til dev-gcp
+        uses: nais/deploy/actions/deploy@v2
+        env:
+          CLUSTER: dev-gcp
+          RESOURCE: .nais/nais-dev.yaml
+          VAR: image=${{ steps.docker-build-push.outputs.image }}
+          VARS: .nais/dev.json # todo -> konfigurerbar
+
+      - name: Etter deploy
+        uses: navikt/digihot-deploy/actions/post-deploy@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Lag release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.VERSION_TAG }}
+          release_name: ${{ env.APPLICATION }} ${{ env.VERSION_TAG }}
+          body: ${{ env.CHANGE_LOG }}
+          draft: true
+          prerelease: false

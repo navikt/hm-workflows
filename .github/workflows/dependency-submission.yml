@@ -1,0 +1,23 @@
+name: Avhengighetsgraf
+
+on:
+  workflow_call:
+
+permissions:
+  contents: write
+
+jobs:
+  dependency-submission:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sjekk ut koden
+        uses: actions/checkout@v4
+
+      - name: Sett opp Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Generer og lagre avhengighetsgraf
+        uses: gradle/actions/dependency-submission@v3
