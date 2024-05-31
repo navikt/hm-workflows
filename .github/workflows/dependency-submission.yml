@@ -3,12 +3,13 @@ name: Avhengighetsgraf
 on:
   workflow_call:
 
-permissions:
-  contents: write
-
 jobs:
   dependency-submission:
+    name: Avhengighetsgraf
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
     steps:
       - name: Sjekk ut koden
         uses: actions/checkout@v4

@@ -11,6 +11,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
+
     steps:
       - name: Sjekk ut koden
         uses: actions/checkout@v4
