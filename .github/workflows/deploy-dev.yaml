@@ -10,7 +10,6 @@ on:
       nais-vars:
         required: false
         type: string
-    secrets: inherit
 
 jobs:
   build:
