@@ -1,11 +1,11 @@
-name: Avhengighetsgraf
+name: Lag avhengighetsgraf
 
 on:
   workflow_call:
 
 jobs:
   dependency-submission:
-    name: Avhengighetsgraf
+    name: Lag avhengighetsgraf
     runs-on: ubuntu-latest
     permissions:
       contents: write
