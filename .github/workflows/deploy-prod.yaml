@@ -46,6 +46,7 @@ jobs:
         env:
           CLUSTER: prod-gcp
           RESOURCE: ${{ inputs.nais-resource }}
+          VAR: commit=${{ github.sha }}
           VARS: ${{ inputs.nais-vars }}
 
       - name: Etter deploy
