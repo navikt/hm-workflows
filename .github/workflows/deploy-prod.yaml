@@ -2,6 +2,14 @@ name: Deploy til prod-gcp
 
 on:
   workflow_call:
+    inputs:
+      nais-resource:
+        required: true
+        type: string
+        default: .nais/nais-prod.yaml
+      nais-vars:
+        required: false
+        type: string
     secrets: inherit
 
 jobs:
@@ -38,8 +46,8 @@ jobs:
         uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
-          RESOURCE: .nais/nais-prod.yaml # todo -> konfigurerbar
-          VARS: .nais/prod.json # todo -> konfigurerbar
+          RESOURCE: ${{ inputs.nais-resource }}
+          VARS: ${{ inputs.nais-vars }}
 
       - name: Etter deploy
         uses: navikt/digihot-deploy/actions/post-production@v2

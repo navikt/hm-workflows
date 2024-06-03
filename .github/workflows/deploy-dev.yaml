@@ -2,6 +2,14 @@ name: Bygg, deploy til dev-gcp og lag release
 
 on:
   workflow_call:
+    inputs:
+      nais-resource:
+        required: true
+        type: string
+        default: .nais/nais-dev.yaml
+      nais-vars:
+        required: false
+        type: string
     secrets: inherit
 
 jobs:
@@ -48,9 +56,9 @@ jobs:
         uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
-          RESOURCE: .nais/nais-dev.yaml
+          RESOURCE: ${{ inputs.nais-resource }}
           VAR: image=${{ steps.docker-build-push.outputs.image }}
-          VARS: .nais/dev.json # todo -> konfigurerbar
+          VARS: ${{ inputs.nais-vars }}
 
       - name: Etter deploy
         uses: navikt/digihot-deploy/actions/post-deploy@v3
