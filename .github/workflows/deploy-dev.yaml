@@ -61,6 +61,7 @@ jobs:
 
       - name: Etter deploy
         uses: navikt/digihot-deploy/actions/post-deploy@v3
+        if: github.ref == 'refs/heads/main'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
