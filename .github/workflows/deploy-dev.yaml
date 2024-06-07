@@ -4,11 +4,11 @@ on:
   workflow_call:
     inputs:
       manifest:
-        required: true
+        required: false
         type: string
         default: .nais/nais-dev.yaml
       cluster:
-        required: true
+        required: false
         type: string
         default: dev-gcp
       vars:
