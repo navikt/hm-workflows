@@ -1,4 +1,4 @@
-name: Deploy til prod-gcp
+name: Deploy til prod
 
 on:
   workflow_call:
@@ -7,13 +7,17 @@ on:
         required: true
         type: string
         default: .nais/nais-prod.yaml
+      cluster:
+        required: true
+        type: string
+        default: prod-gcp
       vars:
         required: false
         type: string
 
 jobs:
   deploy:
-    name: Deploy til prod-gcp
+    name: Deploy til ${{ inputs.cluster }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -41,10 +45,10 @@ jobs:
           echo "IMAGE=${IMAGE}" >> $GITHUB_ENV
           echo $IMAGE
 
-      - name: Deploy til prod-gcp
+      - name: Deploy til ${{ inputs.cluster }}
         uses: nais/deploy/actions/deploy@v2
         env:
-          CLUSTER: prod-gcp
+          CLUSTER: ${{ inputs.cluster }}
           RESOURCE: ${{ inputs.manifest }}
           VAR: commit=${{ github.sha }}
           VARS: ${{ inputs.vars }}
