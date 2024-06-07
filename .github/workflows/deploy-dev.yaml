@@ -55,10 +55,10 @@ jobs:
         id: docker-build-push
         with:
           team: teamdigihot
-          salsa: true
-          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
-          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
           tag: ${{ env.VERSION_TAG }}
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          salsa: true
 
       - name: Deploy til dev-gcp
         uses: nais/deploy/actions/deploy@v2
