@@ -41,7 +41,7 @@ jobs:
           ' 1> gh_response.json
           
           DETEKT_RELEASE_SHA=$(jq --raw-output '.data.repository.release.releaseAssets.tagCommit.oid' gh_response.json)
-          if [ $DETEKT_RELEASE_SHA != "37f0a1d006977512f1f216506cd695039607c3e5" ]; then
+          if [ $DETEKT_RELEASE_SHA != "418f78be677c58dbc84ee5d7118e13587d7ebbee" ]; then
             echo "Release tag doesn't match expected commit SHA"
             exit 1
           fi
