@@ -1,0 +1,17 @@
+name: Kodekvalitet
+
+on:
+  workflow_call:
+
+jobs:
+  codeql-analyze:
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    uses: ./.github/workflows/codeql.yaml@main
+
+  dependency-submission:
+    permissions:
+      contents: write
+    uses: ./.github/workflows/dependency-submission.yaml@main
