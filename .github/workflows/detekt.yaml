@@ -1,4 +1,4 @@
-name: Scan with Detekt
+name: Skann med Detekt
 
 on:
   workflow_call:
@@ -8,7 +8,7 @@ env:
 
 jobs:
   detekt-scan:
-    name: Scan
+    name: Skann med Detekt
     runs-on: ubuntu-latest
     permissions:
       actions: read
