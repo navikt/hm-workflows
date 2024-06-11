@@ -9,9 +9,9 @@ jobs:
       actions: read
       contents: read
       security-events: write
-    uses: ./.github/workflows/codeql.yaml@main
+    uses: ./.github/workflows/codeql.yaml
 
   dependency-submission:
     permissions:
       contents: write
-    uses: ./.github/workflows/dependency-submission.yaml@main
+    uses: ./.github/workflows/dependency-submission.yaml
