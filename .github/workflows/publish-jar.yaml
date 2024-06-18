@@ -1,9 +1,7 @@
 name: Publiser JAR
 
 on:
-  release:
-    types:
-      - created
+  workflow_call:
 
 jobs:
   publish-jar:
