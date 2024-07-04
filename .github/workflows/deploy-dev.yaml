@@ -15,7 +15,8 @@ on:
         required: false
         type: string
     outputs:
-      version-tag: ${{ jobs.build.outputs.version-tag }}
+      version-tag:
+        value: ${{ jobs.build.outputs.version-tag }}
 
 jobs:
   build:
