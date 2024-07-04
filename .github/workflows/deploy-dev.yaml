@@ -23,6 +23,8 @@ jobs:
       packages: write
       contents: write
       id-token: write
+    outputs:
+      version-tag: ${{ steps.define-output.outputs.VERSION_TAG }}
 
     steps:
       - name: Sjekk ut koden
@@ -94,5 +96,7 @@ jobs:
           prerelease: false
 
       - name: Definer output
+        id: define-output
         if: github.ref == 'refs/heads/main'
-        run: echo "VERSION_TAG=${VERSION_TAG}" >> $GITHUB_OUTPUT
+        run: |
+          echo "VERSION_TAG=${VERSION_TAG}" >> $GITHUB_OUTPUT
