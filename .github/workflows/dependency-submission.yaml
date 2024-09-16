@@ -21,4 +21,4 @@ jobs:
           java-version: 21
 
       - name: Generer og lagre avhengighetsgraf
-        uses: gradle/actions/dependency-submission@v3
+        uses: gradle/actions/dependency-submission@v4
