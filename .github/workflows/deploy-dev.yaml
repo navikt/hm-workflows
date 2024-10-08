@@ -65,6 +65,8 @@ jobs:
       - name: Bygg og push Docker image
         uses: nais/docker-build-push@v0
         id: docker-build-push
+        env:
+          TRIVY_JAVA_DB_REPOSITORY: "public.ecr.aws/aquasecurity/trivy-java-db:1"
         with:
           team: teamdigihot
           tag: ${{ env.VERSION_TAG }}
