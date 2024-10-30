@@ -14,6 +14,10 @@ on:
       vars:
         required: false
         type: string
+      java-version:
+        required: false
+        type: string
+        default: 21
     outputs:
       version-tag:
         value: ${{ jobs.build.outputs.version-tag }}
@@ -39,7 +43,7 @@ jobs:
       - name: Sett opp Java
         uses: actions/setup-java@v4
         with:
-          java-version: 21
+          java-version:  ${{ inputs.java-version }}
           distribution: temurin
 
       - name: Sett opp Gradle
