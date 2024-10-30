@@ -1,0 +1,105 @@
+name: Bygg, deploy til dev og lag release v2
+
+on:
+  workflow_call:
+    inputs:
+      manifest:
+        required: false
+        type: string
+        default: .nais/nais-dev.yaml
+      cluster:
+        required: false
+        type: string
+        default: dev-gcp
+      vars:
+        required: false
+        type: string
+    outputs:
+      version-tag:
+        value: ${{ jobs.build.outputs.version-tag }}
+
+jobs:
+  build:
+    name: Bygg, deploy til ${{ inputs.cluster }} og lag release
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: write
+      id-token: write
+    outputs:
+      version-tag: ${{ steps.define-output.outputs.VERSION_TAG }}
+
+    steps:
+      - name: Sjekk ut koden
+        uses: actions/checkout@v4
+
+      - name: Valider Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v3
+
+      - name: Sett opp Java
+        uses: actions/setup-java@v4
+        with:
+          java-version:  ${{ inputs.cluster }} || 21
+          distribution: temurin
+
+      - name: Sett opp Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Bygg applikasjon
+        run: ./gradlew build --no-daemon
+
+      - name: Last opp testrapport
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: testrapport
+          path: |
+            **/build/reports/
+            **/build/test-results/
+
+      - name: Før deploy
+        uses: navikt/digihot-deploy/actions/pre-deploy@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Bygg og push Docker image
+        uses: nais/docker-build-push@v0
+        id: docker-build-push
+        with:
+          team: teamdigihot
+          tag: ${{ env.VERSION_TAG }}
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          salsa: true
+
+      - name: Deploy til ${{ inputs.cluster }}
+        uses: nais/deploy/actions/deploy@v2
+        env:
+          CLUSTER: ${{ inputs.cluster }}
+          RESOURCE: ${{ inputs.manifest }}
+          VAR: image=${{ steps.docker-build-push.outputs.image }},commit=${{ github.sha }}
+          VARS: ${{ inputs.vars }}
+
+      - name: Etter deploy
+        uses: navikt/digihot-deploy/actions/post-deploy@v3
+        if: github.ref == 'refs/heads/main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Lag release
+        uses: actions/create-release@v1
+        if: github.ref == 'refs/heads/main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.VERSION_TAG }}
+          release_name: ${{ env.APPLICATION }} ${{ env.VERSION_TAG }}
+          body: ${{ env.CHANGE_LOG }}
+          draft: true
+          prerelease: false
+
+      - name: Definer output
+        id: define-output
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "VERSION_TAG=${VERSION_TAG}" >> $GITHUB_OUTPUT
