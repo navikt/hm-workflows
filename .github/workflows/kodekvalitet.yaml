@@ -15,8 +15,12 @@ jobs:
       contents: read
       security-events: write
     uses: ./.github/workflows/codeql.yaml
+    with:
+      java-version: ${{ inputs.java-version }}
 
   dependency-submission:
     permissions:
       contents: write
     uses: ./.github/workflows/dependency-submission.yaml
+    with:
+      java-version: ${{ inputs.java-version }}
