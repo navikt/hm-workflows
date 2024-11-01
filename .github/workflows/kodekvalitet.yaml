@@ -2,6 +2,11 @@ name: Kodekvalitet
 
 on:
   workflow_call:
+    inputs:
+      java-version:
+        required: false
+        type: string
+        default: 21
 
 jobs:
   codeql-analyze:
