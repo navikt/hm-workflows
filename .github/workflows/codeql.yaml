@@ -21,9 +21,6 @@ jobs:
       - name: Sjekk ut koden
         uses: actions/checkout@v4
 
-      - name: Valider Gradle wrapper
-        uses: gradle/actions/wrapper-validation@v3
-
       - name: Sett opp CodeQL
         uses: github/codeql-action/init@v2
         with:
