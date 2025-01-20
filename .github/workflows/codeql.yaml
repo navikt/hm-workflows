@@ -37,9 +37,9 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Bygg applikasjon
-        run: ./gradlew clean build
+        run: ./gradlew clean build -x test
 
       - name: Gjør CodeQL-analyse
         uses: github/codeql-action/analyze@v3
         with:
-          category: "/language:java"
+          category: "/language:java-kotlin"
