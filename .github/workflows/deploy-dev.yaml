@@ -69,8 +69,6 @@ jobs:
         with:
           team: teamdigihot
           tag: ${{ env.VERSION_TAG }}
-          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
-          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
           salsa: true
 
       - name: Deploy til ${{ inputs.cluster }}
