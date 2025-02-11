@@ -1,0 +1,82 @@
+name: Bygg og deploy branch til miljø
+
+on:
+  workflow_call:
+    inputs:
+      manifest:
+        required: false
+        type: string
+        default: .nais/nais-dev.yaml
+      cluster:
+        required: false
+        type: string
+        default: dev-gcp
+      vars:
+        required: false
+        type: string
+      java-version:
+        required: false
+        type: string
+        default: 21
+    outputs:
+      version-tag:
+        value: ${{ jobs.build.outputs.version-tag }}
+
+jobs:
+  build:
+    name: Bygg og deploy branch til ${{ inputs.cluster }}
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: write
+      id-token: write
+    outputs:
+      version-tag: ${{ steps.define-output.outputs.VERSION_TAG }}
+
+    steps:
+      - name: Sjekk ut koden
+        uses: actions/checkout@v4
+
+      - name: Sett opp Java
+        uses: actions/setup-java@v4
+        with:
+          java-version:  ${{ inputs.java-version }}
+          distribution: temurin
+
+      - name: Sett opp Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Bygg applikasjon
+        run: ./gradlew clean build
+
+      - name: Last opp testrapport
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: testrapport
+          path: |
+            **/build/reports/
+            **/build/test-results/
+
+      - name: Før deploy
+        uses: navikt/digihot-deploy/actions/pre-deploy@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Bygg og push Docker image
+        uses: nais/docker-build-push@v0
+        id: docker-build-push
+        with:
+          team: teamdigihot
+          tag: ${{ env.VERSION_TAG }}
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          salsa: true
+
+      - name: Deploy til ${{ inputs.cluster }}
+        uses: nais/deploy/actions/deploy@v2
+        env:
+          CLUSTER: ${{ inputs.cluster }}
+          RESOURCE: ${{ inputs.manifest }}
+          VAR: image=${{ steps.docker-build-push.outputs.image }},commit=${{ github.sha }}
+          VARS: ${{ inputs.vars }}
