@@ -3,6 +3,10 @@ name: Kodekvalitet
 on:
   workflow_call:
     inputs:
+      codeql:
+        required: false
+        type: boolean
+        default: true
       java-version:
         required: false
         type: string
@@ -10,6 +14,7 @@ on:
 
 jobs:
   codeql-analyze:
+    if: ${{ inputs.codeql }}
     permissions:
       actions: read
       contents: read
