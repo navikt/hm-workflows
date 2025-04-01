@@ -14,6 +14,9 @@ on:
       vars:
         required: false
         type: string
+    outputs:
+      image:
+        value: ${{ jobs.deploy.outputs.image }}
 
 jobs:
   deploy:
@@ -22,6 +25,8 @@ jobs:
     permissions:
       contents: read
       id-token: write
+    outputs:
+      image: ${{ steps.definer-release-tag.outputs.image }}
 
     steps:
       - name: Sjekk ut koden
@@ -34,6 +39,7 @@ jobs:
           team: teamdigihot
 
       - name: Definer release tag
+        id: definer-release-tag
         env:
           VERSION_TAG: ${{ github.event.release.tag_name }}
           REGISTRY: ${{ steps.nais-login.outputs.registry }}
@@ -41,6 +47,7 @@ jobs:
         run: |
           IMAGE=$REGISTRY/$APP:$VERSION_TAG
           echo "IMAGE=${IMAGE}" >> $GITHUB_ENV
+          echo "image=${IMAGE}" >> $GITHUB_OUTPUT
           echo $IMAGE
 
       - name: Deploy til ${{ inputs.cluster }}
