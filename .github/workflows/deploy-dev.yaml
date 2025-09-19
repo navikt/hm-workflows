@@ -84,13 +84,13 @@ jobs:
 
       - name: Etter deploy
         uses: navikt/digihot-deploy/actions/post-deploy@v3
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/prodFix'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Lag release
         uses: actions/create-release@v1
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' || github.ref == "refs/heads/prodFix"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -102,6 +102,6 @@ jobs:
 
       - name: Definer output
         id: define-output
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'  || github.ref == "refs/heads/prodFix"
         run: |
           echo "VERSION_TAG=${VERSION_TAG}" >> $GITHUB_OUTPUT
