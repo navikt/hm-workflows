@@ -18,6 +18,10 @@ on:
         required: false
         type: string
         default: 21
+      build-command:
+        required: false
+        type: string
+        default: './gradlew clean build'
     outputs:
       version-tag:
         value: ${{ jobs.build.outputs.version-tag }}
@@ -50,7 +54,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
 
       - name: Bygg applikasjon
-        run: ./gradlew clean build
+        run: ${{ inputs.build-command }}
 
       - name: Last opp testrapport
         if: failure()
