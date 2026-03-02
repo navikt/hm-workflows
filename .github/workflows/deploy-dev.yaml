@@ -22,6 +22,10 @@ on:
         required: false
         type: string
         default: './gradlew clean build'
+      salsa:
+        required: false
+        type: boolean
+        default: true
     outputs:
       version-tag:
         value: ${{ jobs.build.outputs.version-tag }}
@@ -76,7 +80,7 @@ jobs:
         with:
           team: teamdigihot
           tag: ${{ env.VERSION_TAG }}
-          salsa: true
+          salsa: ${{ inputs.salsa }}
 
       - name: Deploy til ${{ inputs.cluster }}
         uses: nais/deploy/actions/deploy@v2
