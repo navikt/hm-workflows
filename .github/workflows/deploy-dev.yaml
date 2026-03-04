@@ -47,7 +47,8 @@ jobs:
     steps:
       - name: Sjekk ut koden
         uses: actions/checkout@v6
-
+        with:
+          fetch-depth: 0
       - name: Sett opp Java
         uses: actions/setup-java@v5
         with:
