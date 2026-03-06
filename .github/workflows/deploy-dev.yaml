@@ -17,7 +17,7 @@ on:
       java-version:
         required: false
         type: string
-        default: 21
+        default: '21'
       build-command:
         required: false
         type: string
@@ -60,6 +60,8 @@ jobs:
 
       - name: Bygg applikasjon
         run: ${{ inputs.build-command }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Last opp testrapport
         if: failure()
