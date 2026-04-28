@@ -25,5 +25,7 @@ jobs:
           distribution: temurin
           java-version: ${{ inputs.java-version }}
 
+      - run: echo "VERSION_TAG=$(TZ=Europe/Oslo date +'%y.%j.%H%M%S')" >> $GITHUB_ENV
+
       - name: Generer og lagre avhengighetsgraf
         uses: gradle/actions/dependency-submission@v4
