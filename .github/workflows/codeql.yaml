@@ -36,6 +36,8 @@ jobs:
       - name: Sett opp Gradle
         uses: gradle/actions/setup-gradle@v5
 
+      - run: echo "VERSION_TAG=$(TZ=Europe/Oslo date +'%y.%j.%H%M%S')" >> $GITHUB_ENV
+
       - name: Bygg applikasjon
         run: ./gradlew clean build -x test
 
