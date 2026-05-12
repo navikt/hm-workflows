@@ -26,6 +26,7 @@ jobs:
         with:
           languages: java
           queries: security-and-quality
+          tools: latest
 
       - name: Sett opp Java
         uses: actions/setup-java@v5
