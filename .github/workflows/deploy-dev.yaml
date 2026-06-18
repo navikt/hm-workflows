@@ -58,13 +58,6 @@ jobs:
       - name: Sett opp Gradle
         uses: gradle/actions/setup-gradle@v6
 
-      - name: Debug GitHub authentication
-        run: |
-          echo "GITHUB_ACTOR=$GITHUB_ACTOR"
-          [ -n "$GITHUB_TOKEN" ] && echo "TOKEN_PRESENT=yes" || echo "TOKEN_PRESENT=no"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Bygg applikasjon
         run: ${{ inputs.build-command }}
         env:
