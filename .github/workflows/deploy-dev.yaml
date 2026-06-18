@@ -61,7 +61,7 @@ jobs:
       - name: Bygg applikasjon
         run: ${{ inputs.build-command }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.READER_TOKEN }}
 
       - name: Last opp testrapport
         if: failure()
