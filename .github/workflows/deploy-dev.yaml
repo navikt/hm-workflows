@@ -38,6 +38,7 @@ on:
 jobs:
   build:
     name: Bygg, deploy til ${{ inputs.cluster }} og lag release
+    environment: ${{ inputs.environment }}
     runs-on: ubuntu-latest
     permissions:
       packages: write
