@@ -11,6 +11,9 @@ on:
         required: false
         type: string
         default: dev-gcp
+      environment:
+        required: false
+        type: string
       vars:
         required: false
         type: string
@@ -25,6 +28,7 @@ on:
 jobs:
   build:
     name: Bygg og deploy branch til ${{ inputs.cluster }}
+    environment: ${{ inputs.environment }}
     runs-on: ubuntu-latest
     permissions:
       packages: write
