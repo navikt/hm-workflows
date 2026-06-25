@@ -11,6 +11,9 @@ on:
         required: false
         type: string
         default: dev-gcp
+      environment:
+        required: false
+        type: string
       vars:
         required: false
         type: string
