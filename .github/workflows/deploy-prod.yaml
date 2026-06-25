@@ -11,6 +11,9 @@ on:
         required: false
         type: string
         default: prod-gcp
+      environment:
+        required: false
+        type: string
       vars:
         required: false
         type: string
@@ -21,6 +24,7 @@ on:
 jobs:
   deploy:
     name: Deploy til ${{ inputs.cluster }}
+    environment: ${{ inputs.environment }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
