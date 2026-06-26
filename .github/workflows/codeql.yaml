@@ -6,7 +6,7 @@ on:
       java-version:
         required: false
         type: string
-        default: 21
+        default: '21'
 
 jobs:
   codeql-analyze:
@@ -35,12 +35,14 @@ jobs:
           distribution: temurin
 
       - name: Sett opp Gradle
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@v6
 
       - run: echo "VERSION_TAG=$(TZ=Europe/Oslo date +'%y.%j.%H%M%S')" >> $GITHUB_ENV
 
       - name: Bygg applikasjon
         run: ./gradlew clean build -x test
+        env:
+          GITHUB_TOKEN: ${{ secrets.READER_TOKEN }}
 
       - name: Gjør CodeQL-analyse
         uses: github/codeql-action/analyze@v4
