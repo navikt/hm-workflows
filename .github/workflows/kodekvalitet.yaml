@@ -20,9 +20,9 @@ jobs:
       contents: read
       security-events: write
     uses: ./.github/workflows/codeql.yaml
-    secrets: inherit
     with:
       java-version: ${{ inputs.java-version }}
+    secrets: inherit
 
   dependency-submission:
     permissions:
