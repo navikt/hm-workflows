@@ -20,7 +20,7 @@ on:
       java-version:
         required: false
         type: string
-        default: 21
+        default: "21"
     outputs:
       version-tag:
         value: ${{ jobs.build.outputs.version-tag }}
@@ -39,10 +39,10 @@ jobs:
 
     steps:
       - name: Sjekk ut koden
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Sett opp Java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ inputs.java-version }}
           distribution: temurin
