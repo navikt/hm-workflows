@@ -29,6 +29,10 @@ on:
         required: false
         type: boolean
         default: true
+      no-docker-cache:
+        required: false
+        type: boolean
+        default: false
     outputs:
       version-tag:
         value: ${{ jobs.build.outputs.version-tag }}
@@ -88,6 +92,7 @@ jobs:
           team: teamdigihot
           tag: ${{ env.VERSION_TAG }}
           salsa: ${{ inputs.salsa }}
+          no_cache: ${{ inputs.no-docker-cache }}
 
       - name: Deploy til ${{ inputs.cluster }}
         uses: nais/deploy/actions/deploy@v2
