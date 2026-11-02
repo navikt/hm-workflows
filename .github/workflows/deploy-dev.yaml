@@ -24,7 +24,7 @@ on:
       build-command:
         required: false
         type: string
-        default: "./gradlew clean build"
+        default: "./gradlew build"
       salsa:
         required: false
         type: boolean
