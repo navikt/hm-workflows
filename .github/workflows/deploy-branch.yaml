@@ -51,7 +51,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v6
 
       - name: Bygg applikasjon
-        run: ./gradlew clean build
+        run: ./gradlew build
 
       - name: Last opp testrapport
         if: failure()
