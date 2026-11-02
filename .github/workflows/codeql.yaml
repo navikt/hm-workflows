@@ -40,7 +40,7 @@ jobs:
       - run: echo "VERSION_TAG=$(TZ=Europe/Oslo date +'%y.%j.%H%M%S')" >> $GITHUB_ENV
 
       - name: Bygg applikasjon
-        run: ./gradlew clean build -x test
+        run: ./gradlew build -x test
         env:
           GITHUB_TOKEN: ${{ secrets.READER_TOKEN }}
 
